@@ -7,8 +7,16 @@ paths:
   /api/register:
     post:
       summary: Register a new user
+      description: |
+        Creates a new user account in the system.
+        Performs validation for:
+        - Unique email and username.
+        - Password strength (min 8 chars, uppercase, lowercase, number, special char).
+        - Valid email format.
+        - Acceptance of terms and conditions.
+        - Rate limiting (max 5 attempts per hour).
       tags:
-        - Auth
+        - Authentication
       requestBody:
         required: true
         content:
@@ -92,6 +100,10 @@ paths:
   /oauth2/token:
     post:
       summary: Obtain OAuth2 access token
+      description: |
+        Authenticates a user and returns an access token (Bearer Token).
+        Requires a valid `client_id` and `client_secret` provided via Basic Auth header or body parameters.
+        This endpoint is provided by the Drupal Simple OAuth module.
       tags:
         - Authentication
       security:
