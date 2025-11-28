@@ -176,8 +176,70 @@ paths:
                     type: string
                   message:
                     type: string
+
+  /api/training/{category}:
+    get:
+      summary: Get training content by category
+      description: |
+        Retrieves a list of training contents filtered by the specified category slug.
+        Requires a valid Bearer token and the 'app_user' role.
+      tags:
+        - Training
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - in: path
+          name: category
+          schema:
+            type: string
+          required: true
+          description: The URL-friendly slug of the category (e.g., 'pedestrian-signs').
+      responses:
+        '200':
+          description: A list of training content items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: The node ID.
+                    title:
+                      type: string
+                      description: The training content title.
+                    category:
+                      type: string
+                      description: The human-readable category name.
+                    description:
+                      type: string
+                      description: HTML description of the training content.
+        '401':
+          description: Unauthorized (Invalid or missing token).
+        '403':
+          description: Forbidden (User lacks 'app_user' role).
+        '404':
+          description: Category not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: category_not_found
+                  message:
+                    type: string
+                    example: Training category "invalid-slug" not found.
+
 components:
   securitySchemes:
     basicAuth:
       type: http
       scheme: basic
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
